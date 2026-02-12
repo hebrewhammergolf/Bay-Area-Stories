@@ -557,8 +557,8 @@ Return 3-4 stories max. If results are thin, return fewer. Quality over quantity
     // STATE
     // ========================
     let state = {
-      apiKey: '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',
-      authenticated: true,
+      apiKey: localStorage.getItem('beatsheet_key') || '',
+      authenticated: !!localStorage.getItem('beatsheet_key'),
       stories: {},
       loading: {},
       activeCategory: null,
@@ -731,6 +731,7 @@ Return 3-4 stories max. If results are thin, return fewer. Quality over quantity
           <h1>The <em>Beat</em> Sheet</h1>
           <div class="top-bar">
             <div class="date-line">${dateStr}</div>
+            <button class="logout-btn" id="logout-btn">Change Key</button>
           </div>
           <div class="greeting">${greeting}. What stories are hiding today?</div>
         </header>
@@ -836,6 +837,11 @@ Return 3-4 stories max. If results are thin, return fewer. Quality over quantity
     }
 
     function attachMainListeners() {
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        localStorage.removeItem('beatsheet_key');
+        setState({ apiKey: '', authenticated: false, stories: {}, activeCategory: null });
+      });
+
       document.getElementById('fetch-all-btn')?.addEventListener('click', fetchAll);
 
       document.querySelectorAll('.cat-btn[data-cat-id]').forEach(btn => {
